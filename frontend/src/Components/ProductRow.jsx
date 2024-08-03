@@ -1,4 +1,3 @@
-// src/components/ProductRow.js
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateProduct } from "../Redux/productsSlice";
@@ -27,10 +26,7 @@ const ProductRow = ({ product }) => {
         {product.name}
       </td>
       <td className="px-4 py-2">
-        <button
-          onClick={handleEditClick}
-          className="text-blue-500 hover:underline"
-        >
+        <button onClick={handleEditClick} className="text-blue-500">
           {editing ? "Cancel" : "Quick Edit | Add Product Details"}
         </button>
       </td>
@@ -64,9 +60,16 @@ const ProductRow = ({ product }) => {
           </div>
         ) : (
           <div>
-            <p><strong>Material:</strong> {product.product_details?.Material}</p>
-            <p><strong>Unit Length:</strong> {product.product_details?.Unit_Length}</p>
-            <p><strong>Shape:</strong> {product.product_details?.Shape}</p>
+            <p>
+              <strong>Material:</strong> {product.product_details?.Material}
+            </p>
+            <p>
+              <strong>Unit Length:</strong>{" "}
+              {product.product_details?.Unit_Length}
+            </p>
+            <p>
+              <strong>Shape:</strong> {product.product_details?.Shape}
+            </p>
           </div>
         )}
       </td>

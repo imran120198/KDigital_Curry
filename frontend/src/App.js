@@ -1,16 +1,12 @@
-// src/App.js
 import React from "react";
-import { Provider } from "react-redux";
-import { store } from "./Redux/store";
 import ProductList from "./Components/ProductList";
+import "./App.css"
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <div>
-        <ProductList />
-      </div>
-    </Provider>
+    <div className="App">
+      <ProductList />
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-// src/components/ProductTable.js
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../Redux/productsSlice";
@@ -22,8 +21,8 @@ const ProductTable = () => {
 
   return (
     <div className="p-4">
-      <table className="table-fixed w-full border-collapse bg-white shadow-md rounded-xl">
-        <thead className="bg-blue-100 text-left text-gray-600">
+      <table className="table-fixed w-full border-collapse bg-white shadow-md border rounded-lg">
+        <thead className="bg-blue-100 text-left text-gray-700">
           <tr>
             <th className="px-4 py-2">
               <input type="checkbox" className="mr-2" />

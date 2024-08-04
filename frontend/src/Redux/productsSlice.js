@@ -1,10 +1,11 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await fetch("https://kdigital-curry-backend.onrender.com/product");
+    const response = await fetch(
+      "https://kdigital-curry-backend.onrender.com/product"
+    );
     return response.json();
   }
 );
@@ -14,8 +15,12 @@ const productsSlice = createSlice({
   initialState: {
     products: [],
     error: null,
+    limit: 5,
   },
   reducers: {
+    setLimit: (state, action) => {
+      state.limit = action.payload;
+    },
     updateProduct: (state, action) => {
       const { id, details } = action.payload;
       const existingProduct = state.products.find(
@@ -49,5 +54,12 @@ const productsSlice = createSlice({
   },
 });
 
-export const { updateProduct, bulkUpdateProducts } = productsSlice.actions;
+export const {
+  updateProduct,
+  bulkUpdateProducts,
+  setProduct,
+  setMaterial,
+  setGrade,
+  setLimit,
+} = productsSlice.actions;
 export default productsSlice.reducer;

@@ -5,9 +5,18 @@ import AddProductModal from './AddProductModal';
 
 const ProductList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = () => {
+    // You can dispatch an action or update the state here if needed
+  };
 
   return (
     <div className="w-full h-full flex items-start flex-col">
@@ -19,18 +28,23 @@ const ProductList = () => {
           + Add Product
         </button>
       </div>
-      <div className="p-4">
+      <div className="p-4 flex">
         <input
           placeholder="Search Products"
           className="w-[500px] border border-grey-800 p-2 rounded-l-lg"
+          value={searchQuery}
+          onChange={handleSearchChange}
         />
-        <button className="p-2 bg-blue-700 text-white w-[100px] rounded-r-lg">
+        <button
+          className="p-2 bg-blue-700 text-white w-[100px] rounded-r-lg"
+          onClick={handleSearch}
+        >
           Search
         </button>
       </div>
       <Filters />
       <div>
-        <ProductTable />
+        <ProductTable searchQuery={searchQuery} />
       </div>
       <AddProductModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>

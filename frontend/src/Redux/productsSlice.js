@@ -1,10 +1,10 @@
-// src/slices/productsSlice.js
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await fetch("http://localhost:5000/products");
+    const response = await fetch("https://kdigital-curry-backend.onrender.com/product");
     return response.json();
   }
 );
@@ -13,7 +13,6 @@ const productsSlice = createSlice({
   name: "products",
   initialState: {
     products: [],
-    status: "idle",
     error: null,
   },
   reducers: {
@@ -40,15 +39,11 @@ const productsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProducts.pending, (state) => {
-        state.status = "loading";
-      })
+      .addCase(fetchProducts.pending, (state) => {})
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.products = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
-        state.status = "failed";
         state.error = action.error.message;
       });
   },

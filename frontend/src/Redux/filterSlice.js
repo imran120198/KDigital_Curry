@@ -1,4 +1,3 @@
-// src/slices/filterSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const filterSlice = createSlice({

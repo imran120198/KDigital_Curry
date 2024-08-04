@@ -1,11 +1,21 @@
-import React from "react";
-import ProductTable from "./ProductTable";
+import React, { useState } from 'react';
+import ProductTable from './ProductTable';
+import Filters from './Filters';
+import AddProductModal from './AddProductModal';
 
 const ProductList = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   return (
-    <div className="w-full h-full flex items-start flex flex-col">
+    <div className="w-full h-full flex items-start flex-col">
       <div className="p-4">
-        <button className="p-2 bg-blue-700 text-white border rounded-full w-[200px]">
+        <button
+          className="p-2 bg-blue-700 text-white border rounded-full w-[200px]"
+          onClick={handleOpenModal}
+        >
           + Add Product
         </button>
       </div>
@@ -18,9 +28,11 @@ const ProductList = () => {
           Search
         </button>
       </div>
+      <Filters />
       <div>
         <ProductTable />
       </div>
+      <AddProductModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };

@@ -14,9 +14,6 @@ const ProductList = () => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearch = () => {
-    // You can dispatch an action or update the state here if needed
-  };
 
   return (
     <div className="w-full h-full flex items-start flex-col">
@@ -37,7 +34,6 @@ const ProductList = () => {
         />
         <button
           className="p-2 bg-blue-700 text-white w-[100px] rounded-r-lg"
-          onClick={handleSearch}
         >
           Search
         </button>

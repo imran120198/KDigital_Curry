@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../Redux/productsSlice";
 import ProductRow from "./ProductRow";
+import { Hourglass } from "react-loader-spinner";
 
 const ProductTable = ({ searchQuery }) => {
   const dispatch = useDispatch();
@@ -9,17 +10,22 @@ const ProductTable = ({ searchQuery }) => {
   const error = useSelector((state) => state.products.error);
   const limit = useSelector((state) => state.filter.limit);
   const [filteredProducts, setFilteredProducts] = useState(products);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
-          `https://kdigital-curry-backend.onrender.com/product?limit=${limit}`
+          `https://kdigital-curry-backend.onrender.com/product`
         );
+
         const data = await response.json();
         dispatch(fetchProducts(data));
+        setLoading(false);
       } catch (err) {
         console.error("Failed to fetch products:", err);
+        setLoading(false);
       }
     };
 
@@ -60,10 +66,18 @@ const ProductTable = ({ searchQuery }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.length === 0 ? (
+          {loading ? (
             <tr>
-              <td colSpan="4" className="text-center py-4">
-                No products found
+              <td colSpan="4">
+                <div className="flex items-center justify-center h-80">
+                  <Hourglass
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="hourglass-loading"
+                    colors={["#306cce", "#72a1ed"]}
+                  />
+                </div>
               </td>
             </tr>
           ) : (

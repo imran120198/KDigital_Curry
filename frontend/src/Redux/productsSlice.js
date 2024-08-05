@@ -10,6 +10,26 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async ({ id, details }) => {
+    const response = await fetch(
+      `https://kdigital-curry-backend.onrender.com/product/update/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(details),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to update product");
+    }
+    return { id, details };
+  }
+);
+
 const productsSlice = createSlice({
   name: "products",
   initialState: {
@@ -21,14 +41,8 @@ const productsSlice = createSlice({
     setLimit: (state, action) => {
       state.limit = action.payload;
     },
-    updateProduct: (state, action) => {
-      const { id, details } = action.payload;
-      const existingProduct = state.products.find(
-        (product) => product.id === id
-      );
-      if (existingProduct) {
-        Object.assign(existingProduct, details);
-      }
+    addProduct: (state, action) => {
+      state.products.push(action.payload);
     },
     bulkUpdateProducts: (state, action) => {
       const { ids, details } = action.payload;
@@ -54,12 +68,6 @@ const productsSlice = createSlice({
   },
 });
 
-export const {
-  updateProduct,
-  bulkUpdateProducts,
-  setProduct,
-  setMaterial,
-  setGrade,
-  setLimit,
-} = productsSlice.actions;
+export const { addProduct, setLimit, bulkUpdateProducts } =
+  productsSlice.actions;
 export default productsSlice.reducer;

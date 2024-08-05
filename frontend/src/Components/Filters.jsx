@@ -1,10 +1,13 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductType, setMaterial } from "../Redux/filterSlice";
+import { setLimit } from "../Redux/productsSlice";
 
 const Filter = () => {
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.filter);
+  const products = useSelector((state) => state.products.products);
+
   console.log("filter:", filter);
 
   const handleProductChange = (e) => {
@@ -13,6 +16,10 @@ const Filter = () => {
 
   const handleMaterialChange = (e) => {
     dispatch(setMaterial(e.target.value));
+  };
+
+  const handleLimitChange = (e) => {
+    dispatch(setLimit(e.target.value));
   };
 
   return (
@@ -58,7 +65,11 @@ const Filter = () => {
       </div>
       <div className="flex flex-row p-4">
         <p className="text-lg mr-3 font-medium">Products</p>
-        <select className="h-[30px]">
+        <select
+          className="h-[30px]"
+          value={products.limit}
+          onChange={handleLimitChange}
+        >
           <option>5</option>
           <option>10</option>
           <option>15</option>

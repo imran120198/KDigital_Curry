@@ -1,105 +1,199 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateProduct } from "../Redux/productsSlice";
+import { fetchProducts } from "../Redux/productsSlice";
 
 const ProductRow = ({ product }) => {
   const dispatch = useDispatch();
-  const [editing, setEditing] = useState(false);
-  const [details, setDetails] = useState({
-    material: product.material || "",
-    shape: product.product_details?.Shape || "",
-    length: product.product_details?.Unit_Length || "",
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [editData, setEditData] = useState({
+    material: "",
+    shape: "",
+    length: "",
+    thickness: "",
+    surfaceFinished: "",
+    outsideDiameter: "",
+    price: "",
   });
 
-  const handleEditClick = () => {
-    setEditing(!editing);
-  };
-
-  const handleSaveClick = () => {
-    dispatch(updateProduct({ id: product.id, details }));
-    setEditing(false);
+  const handleExpand = (id) => {
+    if (expandedRow === id) {
+      setExpandedRow(null);
+    } else {
+      setExpandedRow(id);
+      setEditData({
+        material: product.material || "",
+        shape: product.product_details?.shape || "",
+        length: product.product_details?.length || "",
+        thickness: product.product_details?.thickness || "",
+        surfaceFinished: product.product_details?.surfaceFinished || "",
+        outsideDiameter: product.product_details?.outsideDiameter || "",
+        price: product.price || "",
+      });
+    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDetails((prevDetails) => ({
-      ...prevDetails,
+    setEditData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
 
+  const handleUpdate = async (id) => {
+    try {
+      const response = await fetch(
+        `https://kdigital-curry-backend.onrender.com/product/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editData),
+        }
+      );
+      if (response.ok) {
+        dispatch(fetchProducts());
+        setExpandedRow(null);
+      } else {
+        console.error("Failed to update product:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setExpandedRow(null);
+  };
+
   return (
-    <tr className="border-b border-gray-200">
-      <td className="px-4 py-2">
-        <input type="checkbox" className="mr-2" />
-        {product.name}
-      </td>
-      <td className="px-4 py-2">
-        <button
-          onClick={handleEditClick}
-          className={`text-blue-500 ${
-            editing ? "bg-blue-100" : "bg-white"
-          } px-2 py-1 rounded`}
-        >
-          {editing ? "Cancel" : "Quick Edit | Add Product Details"}
-        </button>
-      </td>
-      <td className="px-4 py-2">
-        {editing ? (
-          <div className="p-4 border-t border-gray-200 mt-2">
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-1">Material</label>
-              <input
-                type="text"
-                name="material"
-                value={details.material}
-                onChange={handleInputChange}
-                className="border border-gray-300 rounded px-2 py-1 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-1">Shape</label>
-              <input
-                type="text"
-                name="shape"
-                value={details.shape}
-                onChange={handleInputChange}
-                className="border border-gray-300 rounded px-2 py-1 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-1">Unit Length</label>
-              <input
-                type="text"
-                name="length"
-                value={details.length}
-                onChange={handleInputChange}
-                className="border border-gray-300 rounded px-2 py-1 w-full"
-              />
-            </div>
-            <button
-              onClick={handleSaveClick}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Save
-            </button>
-          </div>
-        ) : (
+    <React.Fragment>
+      <tr>
+        <td className="py-2 px-4 border-b">
+          <input type="checkbox" className="m-2" />
+          {product.name}
+        </td>
+        <td className="py-2 px-4 border-b">
+          <button
+            className="text-blue-500 mr-2"
+            onClick={() => handleExpand(product.id)}
+          >
+            {expandedRow === product.id
+              ? "Collapse"
+              : "Quick Edit | Add Product Details"}
+          </button>
+        </td>
+        <td className="py-2 px-4 border-b">
           <div>
-            <p>
-              <strong>Material:</strong> {product.material}
-            </p>
-            <p>
-              <strong>Unit Length:</strong> {product.product_details?.thickness}
-            </p>
-            <p>
-              <strong>Shape:</strong> {product.product_details?.shape}
-            </p>
+            <strong>Material: </strong>
+            {product.material}
           </div>
-        )}
-      </td>
-      <td className="px-4 py-2">{product.price} / KG</td>
-    </tr>
+          <div>
+            <strong>Unit Length:</strong> {product.product_details?.thickness}
+          </div>
+          <div>
+            <strong>Shape: </strong>
+            {product.product_details?.shape}
+          </div>
+        </td>
+        <td className="py-2 px-4 border-b">
+          {expandedRow === product.id ? (
+            <input
+              type="text"
+              name="price"
+              value={editData.price}
+              onChange={handleInputChange}
+              className="border p-2 rounded w-full"
+            />
+          ) : (
+            `${product.price}/KG`
+          )}
+        </td>
+      </tr>
+      {expandedRow === product.id && (
+        <tr>
+          <td colSpan="4" className="py-2 px-4 border-b bg-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block mb-1">Material:</label>
+                <input
+                  type="text"
+                  name="material"
+                  value={editData.material}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Shape:</label>
+                <input
+                  type="text"
+                  name="shape"
+                  value={editData.shape}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Length:</label>
+                <input
+                  type="text"
+                  name="length"
+                  value={editData.length}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Thickness:</label>
+                <input
+                  type="text"
+                  name="thickness"
+                  value={editData.thickness}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Surface Finish:</label>
+                <input
+                  type="text"
+                  name="surfaceFinished"
+                  value={editData.surfaceFinished}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Outside Diameter:</label>
+                <input
+                  type="text"
+                  name="outsideDiameter"
+                  value={editData.outsideDiameter}
+                  onChange={handleInputChange}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={() => handleUpdate(product.id)}
+              >
+                Update
+              </button>
+              <button
+                className="bg-gray-300 text-black px-4 py-2 rounded"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          </td>
+        </tr>
+      )}
+    </React.Fragment>
   );
 };
 

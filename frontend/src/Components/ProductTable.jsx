@@ -35,11 +35,15 @@ const ProductTable = ({ searchQuery }) => {
     let results = products;
 
     if (filter.productType) {
-      results = results.filter((product) => product.productType === filter.productType);
+      results = results.filter(
+        (product) => product.productType === filter.productType
+      );
     }
 
     if (filter.material) {
-      results = results.filter((product) => product.material === filter.material);
+      results = results.filter(
+        (product) => product.material === filter.material
+      );
     }
 
     if (searchQuery) {

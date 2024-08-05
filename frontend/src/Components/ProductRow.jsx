@@ -22,11 +22,11 @@ const ProductRow = ({ product }) => {
       setExpandedRow(id);
       setEditData({
         material: product.material || "",
-        shape: product.product_details?.shape || "",
-        length: product.product_details?.length || "",
-        thickness: product.product_details?.thickness || "",
-        surfaceFinished: product.product_details?.surfaceFinished || "",
-        outsideDiameter: product.product_details?.outsideDiameter || "",
+        shape: product.product_details.shape || "",
+        length: product.product_details.length || "",
+        thickness: product.product_details.thickness || "",
+        surfaceFinished: product.product_details.surfaceFinished || "",
+        outsideDiameter: product.product_details.outsideDiameter || "",
         price: product.price || "",
       });
     }
@@ -49,7 +49,17 @@ const ProductRow = ({ product }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(editData),
+          body: JSON.stringify({
+            material: editData.material,
+            product_details: {
+              shape: editData.shape,
+              length: editData.length,
+              thickness: editData.thickness,
+              surfaceFinished: editData.surfaceFinished,
+              outsideDiameter: editData.outsideDiameter,
+            },
+            price: editData.price,
+          }),
         }
       );
       if (response.ok) {
@@ -77,9 +87,9 @@ const ProductRow = ({ product }) => {
         <td className="py-2 px-4 border-b">
           <button
             className="text-blue-500 mr-2"
-            onClick={() => handleExpand(product.id)}
+            onClick={() => handleExpand(product._id)}
           >
-            {expandedRow === product.id
+            {expandedRow === product._id
               ? "Collapse"
               : "Quick Edit | Add Product Details"}
           </button>
@@ -98,7 +108,7 @@ const ProductRow = ({ product }) => {
           </div>
         </td>
         <td className="py-2 px-4 border-b">
-          {expandedRow === product.id ? (
+          {expandedRow === product._id ? (
             <input
               type="text"
               name="price"
@@ -111,7 +121,7 @@ const ProductRow = ({ product }) => {
           )}
         </td>
       </tr>
-      {expandedRow === product.id && (
+      {expandedRow === product._id && (
         <tr>
           <td colSpan="4" className="py-2 px-4 border-b bg-gray-100">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -179,7 +189,7 @@ const ProductRow = ({ product }) => {
             <div className="flex gap-2 mt-4">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={() => handleUpdate(product.id)}
+                onClick={() => handleUpdate(product._id)}
               >
                 Update
               </button>

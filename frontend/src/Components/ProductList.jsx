@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import ProductTable from './ProductTable';
-import Filters from './Filters';
-import AddProductModal from './AddProductModal';
+import React, { useState } from "react";
+import ProductTable from "./ProductTable";
+import AddProductModal from "./AddProductModal";
+import Filter from "./Filters";
 
 const ProductList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -13,7 +13,6 @@ const ProductList = () => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
 
   return (
     <div className="w-full h-full flex items-start flex-col">
@@ -32,13 +31,11 @@ const ProductList = () => {
           value={searchQuery}
           onChange={handleSearchChange}
         />
-        <button
-          className="p-2 bg-blue-700 text-white w-[100px] rounded-r-lg"
-        >
+        <button className="p-2 bg-blue-700 text-white w-[100px] rounded-r-lg">
           Search
         </button>
       </div>
-      <Filters />
+      <Filter />
       <div>
         <ProductTable searchQuery={searchQuery} />
       </div>

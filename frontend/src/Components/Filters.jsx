@@ -1,13 +1,14 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProduct, setMaterial, setGrade } from "../Redux/filterSlice";
+import { setProductType, setMaterial } from "../Redux/filterSlice";
 
-const FilterBar = () => {
+const Filter = () => {
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.filter);
+  console.log("filter:", filter);
 
   const handleProductChange = (e) => {
-    dispatch(setProduct(e.target.value));
+    dispatch(setProductType(e.target.value));
   };
 
   const handleMaterialChange = (e) => {
@@ -18,12 +19,18 @@ const FilterBar = () => {
     <div className="flex flex-row justify-between w-full">
       <div className="p-4 flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
         <select
-          value={filter.product}
+          value={filter.productType}
           onChange={handleProductChange}
           className="p-2 w-[200px] border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
         >
           <option value="">Products</option>
           <option value="Pipes">Pipes</option>
+          <option value="Profiles">Profiles</option>
+          <option value="Tubes">Tubes</option>
+          <option value="Sheets">Sheets</option>
+          <option value="Rods">Rods</option>
+          <option value="Plates">Plates</option>
+          <option value="Cables">Cables</option>
         </select>
         <select
           value={filter.material}
@@ -31,7 +38,13 @@ const FilterBar = () => {
           className="p-2 w-[200px] border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
         >
           <option value="">Material</option>
-          <option value="Stainless Steel">Stainless Steel</option>
+          <option value="Steel">Steel</option>
+          <option value="Aluminum">Aluminum</option>
+          <option value="Copper">Copper</option>
+          <option value="Brass">Brass</option>
+          <option value="Iron">Iron</option>
+          <option value="Fiber">Fiber</option>
+          <option value="PVC">PVC</option>
         </select>
         <button className="w-[100px] border border-none bg-white border rounded-xl font-medium">
           Filter
@@ -55,4 +68,4 @@ const FilterBar = () => {
   );
 };
 
-export default FilterBar;
+export default Filter;

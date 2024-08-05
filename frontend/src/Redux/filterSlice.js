@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const filterSlice = createSlice({
   name: "filter",
   initialState: {
-    product: "",
+    productType: "",
     material: "",
     grade: "",
   },
   reducers: {
-    setProduct: (state, action) => {
-      state.product = action.payload;
+    setProductType: (state, action) => {
+      state.productType = action.payload;
     },
     setMaterial: (state, action) => {
       state.material = action.payload;
@@ -20,5 +20,5 @@ const filterSlice = createSlice({
   },
 });
 
-export const { setProduct, setMaterial, setGrade } = filterSlice.actions;
+export const { setProductType, setMaterial, setGrade } = filterSlice.actions;
 export default filterSlice.reducer;

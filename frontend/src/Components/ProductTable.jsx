@@ -8,8 +8,8 @@ const ProductTable = ({ searchQuery }) => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products.products);
   const error = useSelector((state) => state.products.error);
-  const limit = useSelector((state) => state.filter.limit);
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const filter = useSelector((state) => state.filter);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -19,7 +19,6 @@ const ProductTable = ({ searchQuery }) => {
         const response = await fetch(
           `https://kdigital-curry-backend.onrender.com/product`
         );
-
         const data = await response.json();
         dispatch(fetchProducts(data));
         setLoading(false);
@@ -30,18 +29,27 @@ const ProductTable = ({ searchQuery }) => {
     };
 
     loadProducts();
-  }, [dispatch, limit]);
+  }, [dispatch]);
 
   useEffect(() => {
+    let results = products;
+
+    if (filter.productType) {
+      results = results.filter((product) => product.productType === filter.productType);
+    }
+
+    if (filter.material) {
+      results = results.filter((product) => product.material === filter.material);
+    }
+
     if (searchQuery) {
-      const results = products.filter((product) =>
+      results = results.filter((product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredProducts(results);
-    } else {
-      setFilteredProducts(products);
     }
-  }, [searchQuery, products]);
+
+    setFilteredProducts(results.slice(0, filter.limit));
+  }, [filter, searchQuery, products]);
 
   if (error) {
     return (
